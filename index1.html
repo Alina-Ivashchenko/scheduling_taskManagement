@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks View</title>
+    <style>
+        /* General Page Styling */
+        body, html {
+            font-family: 'Neutraface Text', sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Header Styling */
+        .header-bar {
+            width: 100%;
+            height: 138px;
+            background: #7A0019;
+            position: absolute; /* 修改为固定定位 */
+            top: 0;
+            z-index: 10; /* 确保在其他元素之上 */
+        }
+
+        .logo {
+            width: 117px;
+            height: 122px;
+            position: absolute; /* 修改为固定定位 */
+            top: 10px;
+            left: calc(50% - 58.5px); /* 修正定位 */
+            z-index: 15;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 35px;
+            position: absolute; /* 修改为固定定位 */
+            top: 163px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            z-index: 10;
+        }
+
+        .nav-item {
+            flex: 1;
+            max-width: 180px;
+            height: 35px;
+            padding: 10px;
+            background: #FFCC33;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 25px;
+            margin: 0 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            box-shadow: 0px 0px 0px 3px white;
+        }
+
+        .log-out-btn {
+            position: absolute; /* 修改为固定定位 */
+            top: 10px;
+            left: 10px;
+            background-color: #7A0019;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 15;
+        }
+
+        .log-out-btn:hover {
+            background-color: #D1A31A;
+        }
+
+        /* Title Styling */
+        .title {
+            text-align: center;
+            color: black;
+            font-size: 40px;
+            font-weight: 700;
+            font-family: 'Neutraface Text', sans-serif;
+            margin: 20px 0;
+            margin-top: 220px; /* 添加顶部外边距，避免被遮挡 */
+        }
+
+        /* Table Styling */
+        .table-container {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            max-width: 900px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto; /* Center the table and add space above */
+            background-color: white;   
+        }
+
+        .row {
+            display: flex;
+            width: 100%;
+        }
+
+        .header, .cell {
+            flex: 1;
+            padding: 5px; /* 调整内边距 */
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #7A0019 !important;
+            color: white;
+            font-weight: bold;
+        }
+
+        .cell {
+            background-color: white;
+        }
+
+        .time-slot {
+            flex: 1;
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        /* Employee Name Input */
+        .employee-name-container {
+            position: absolute; /* 修改为固定定位 */
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Neutraface Text', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 15;
+        }
+
+        .employee-name-container label {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .employee-name-container input {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            font-size: 14px;
+            color: #333;
+            width: 120px;
+        }
+
+        /* 新增样式 */
+        .editable-cell {
+            cursor: pointer;
+            background-color: #e6f7ff; /* 编辑模式下的背景色 */
+        }
+
+        .save-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #7A0019;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #590014;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-bar"></div>
+        <img class="logo" src="v45_1177.png" alt="IT Help Desk Logo" />
+        <div class="nav-bar">
+            <div class="nav-item" onclick="goToMySchedule()">MY SCHEDULE</div>
+            <div class="nav-item" onclick="goToTradeboard()">TRADEBOARD</div>
+            <div class="nav-item" onclick="goToTasks()">TASKS</div>
+            <div class="nav-item"onclick="goToEveryonesSchedule()">EVERYONE'S SCHEDULE</div>
+        </div>
+        <button class="log-out-btn" onclick="logOut()">Log Out</button>
+
+        <div class="employee-name-container">
+            <label for="employeeName">Employee:</label>
+            <input id="employeeName" type="text" value="Alice" oninput="fetchAndRenderData()" />
+        </div>
+    </div>
+
+    <div class="title">MY SCHEDULE</div>
+
+    <div class="table-container">
+        <div class="row">
+            <div class="header time-slot">Time Slot</div>
+            <div class="header">Monday</div>
+            <div class="header">Tuesday</div>
+            <div class="header">Wednesday</div>
+            <div class="header">Thursday</div>
+            <div class="header">Friday</div>
+        </div>
+        <div id="tableBody"></div>
+    </div>
+
+    <!-- 在表格下方添加按钮 -->
+    <button id="editButton" class="save-button">Edit</button>
+
+    <script>
+        /// Retrieve logged-in user from localStorage
+        const loggedInUser = localStorage.getItem("loggedInUser");
+
+        // Redirect to login if no user is logged in
+        if (!loggedInUser) {
+            window.location.href = "login.html"; // Redirect to login page
+        }
+
+         function goToEveryonesSchedule(){
+            window.location.href = "index2.html";
+        }
+
+        function goToMySchedule(){
+            window.location.href = "index1.html";
+        }
+
+        function goToTasks(){
+            window.location.href = "userstasks.html";
+        }
+
+        function goToTradeboard(){
+            window.location.href = "tradeboard.html";
+        }
+
+
+        let isEditing = false;
+        let availabilityData = {}; // 用于存储可用性数据
+
+        function fetchAndRenderData() {
+            const employeeName = document.getElementById('employeeName').value.trim();
+            const tableBody = document.getElementById('tableBody');
+
+            if (!employeeName) {
+                tableBody.innerHTML = '<div class="row"><div class="cell" colspan="6">No data available</div></div>';
+                return;
+            }
+
+            fetch('http://localhost:3000/availability')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    const data = json.data; // 访问返回结果中的 data 属性
+                    const filteredData = data.filter(row => row.EmployeeName.toLowerCase() === employeeName.toLowerCase());
+
+                    if (filteredData.length === 0) {
+                        tableBody.innerHTML = '<div class="row"><div class="cell" colspan="6">No data available</div></div>';
+                        return;
+                    }
+
+                    const timeSlots = {};
+                    availabilityData = {}; // 重置可用性数据
+
+                    filteredData.forEach(row => {
+                        const { TimeSlot, DayOfWeek, Availability } = row;
+                        if (!timeSlots[TimeSlot]) {
+                            timeSlots[TimeSlot] = {
+                                Monday: 'NO',
+                                Tuesday: 'NO',
+                                Wednesday: 'NO',
+                                Thursday: 'NO',
+                                Friday: 'NO',
+                            };
+                        }
+                        timeSlots[TimeSlot][DayOfWeek] = Availability ? 'YES' : 'NO';
+
+                        // 存储可用性数据
+                        if (!availabilityData[TimeSlot]) {
+                            availabilityData[TimeSlot] = {};
+                        }
+                        availabilityData[TimeSlot][DayOfWeek] = Availability ? 1 : 0;
+                    });
+
+                    tableBody.innerHTML = '';
+                    Object.keys(timeSlots).forEach(timeSlot => {
+                        const row = document.createElement('div');
+                        row.classList.add('row');
+                        row.innerHTML = `
+                            <div class="cell time-slot">${timeSlot}</div>
+                            <div class="cell" data-timeslot="${timeSlot}" data-day="Monday">${timeSlots[timeSlot].Monday}</div>
+                            <div class="cell" data-timeslot="${timeSlot}" data-day="Tuesday">${timeSlots[timeSlot].Tuesday}</div>
+                            <div class="cell" data-timeslot="${timeSlot}" data-day="Wednesday">${timeSlots[timeSlot].Wednesday}</div>
+                            <div class="cell" data-timeslot="${timeSlot}" data-day="Thursday">${timeSlots[timeSlot].Thursday}</div>
+                            <div class="cell" data-timeslot="${timeSlot}" data-day="Friday">${timeSlots[timeSlot].Friday}</div>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                    // 如果处于编辑模式，添加可编辑功能
+                    if (isEditing) {
+                        makeCellsEditable();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    tableBody.innerHTML = '<div class="row"><div class="cell" colspan="6">Error loading data</div></div>';
+                });
+        }
+
+        function makeCellsEditable() {
+            const cells = document.querySelectorAll('#tableBody .cell:not(.time-slot)');
+            cells.forEach(cell => {
+                cell.classList.add('editable-cell');
+                cell.addEventListener('click', toggleAvailability);
+            });
+        }
+
+        function removeEditableCells() {
+            const cells = document.querySelectorAll('#tableBody .cell:not(.time-slot)');
+            cells.forEach(cell => {
+                cell.classList.remove('editable-cell');
+                cell.removeEventListener('click', toggleAvailability);
+            });
+        }
+
+        function toggleAvailability(event) {
+            const cell = event.target;
+            const timeSlot = cell.getAttribute('data-timeslot');
+            const day = cell.getAttribute('data-day');
+            let currentValue = cell.textContent.trim();
+
+            // 切换 YES 和 NO
+            currentValue = currentValue === 'YES' ? 'NO' : 'YES';
+            cell.textContent = currentValue;
+
+            // 更新 availabilityData
+            availabilityData[timeSlot][day] = currentValue === 'YES' ? 1 : 0;
+        }
+
+        // 处理编辑和保存按钮点击事件
+        const editButton = document.getElementById('editButton');
+        editButton.addEventListener('click', () => {
+            if (!isEditing) {
+                // 进入编辑模式
+                isEditing = true;
+                editButton.textContent = 'Save';
+                makeCellsEditable();
+            } else {
+                // 退出编辑模式，保存更改
+                isEditing = false;
+                editButton.textContent = 'Edit';
+                removeEditableCells();
+                saveChanges();
+            }
+        });
+
+        function saveChanges() {
+            const employeeName = document.getElementById('employeeName').value.trim();
+            if (!employeeName) {
+                alert('员工姓名不能为空');
+                return;
+            }
+
+            // 准备要发送的数据
+            const updatedData = [];
+            Object.keys(availabilityData).forEach(timeSlot => {
+                const days = availabilityData[timeSlot];
+                Object.keys(days).forEach(day => {
+                    updatedData.push({
+                        EmployeeName: employeeName,
+                        TimeSlot: timeSlot,
+                        DayOfWeek: day,
+                        Availability: days[day]
+                    });
+                });
+            });
+
+            // 发送 POST 请求到服务器
+            fetch('http://localhost:3000/updateAvailability', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed Saving data');
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.success) {
+                    alert('Updated');
+                    fetchAndRenderData(); // 重新加载数据
+                } else {
+                    alert('Failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error saving data:', error);
+                alert('Failed');
+            });
+        }
+
+        function logOut() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+
+        fetchAndRenderData();
+    </script>
+</body>
+</html>
+

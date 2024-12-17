@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #7A0019;
+            color: #fff;
+        }
+
+        .LogIn {
+            width: 85%;
+            max-width: 600px;
+            background-color: #7A0019;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .ItHelpDeskLogoV22 {
+            width: 70%;
+            max-width: 420px;
+            height: auto;
+            margin-top: 20px;
+        }
+
+       
+        .InputField {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 8px;
+        }
+
+        .Input {
+            height: 30px;
+            padding: 5px 0;
+            width: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            border: 1px solid #D9D9D9;
+        }
+
+        .Input input {
+            width: 100%;
+            padding: 8px;
+            background: none;
+            border: none;
+            outline: none;
+            color: #D9D9D9;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+     
+        .Frame16 {
+            padding: 10px 0;
+            width: 60%;
+            max-width: 180px;
+            background: #FFCC33;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .Frame16:hover {
+            background: #FFCC33;
+            box-shadow: 0px 0px 0px 3px white; 
+        }
+
+        .LogInText {
+            color: white;
+            font-size: 18px;
+            font-family: 'Neutraface Text', sans-serif;
+            font-weight: 700;
+        }
+
+        .error-message {
+            color: rgb(255, 255, 255);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="LogIn">
+    <img class="ItHelpDeskLogoV22" src="v45_1177.png" alt="IT Help Desk Logo" />
+    <div class="InputField">
+        <div class="Input">
+            <input type="text" placeholder="Username" id="username" />
+        </div>
+    </div>
+    <div class="InputField">
+        <div class="Input">
+            <input type="password" placeholder="Password" id="password" />
+        </div>
+    </div>
+    <div class="Frame16" onclick="authenticate()">
+        <div class="LogInText">Log In</div>
+    </div>
+    
+    <p id="error-message" class="error-message"></p>
+</div>
+
+<script>
+    function authenticate() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorMessage = document.getElementById('error-message');
+
+    fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    })
+        .then((response) => {
+            if (response.ok) {
+                // Save the logged-in user's username in localStorage
+                localStorage.setItem("loggedInUser", username);
+
+                // Redirect based on username
+                if (username.toLowerCase() === 'admin') {
+                    window.location.href = 'main-menu-admin.html';
+                } else {
+                    window.location.href = 'main-menu.html';
+                }
+            } else {
+                throw new Error('Invalid username or password');
+            }
+        })
+        .catch((error) => {
+            errorMessage.textContent = error.message; 
+        });
+}
+</script>
+
+</body>
+</html>

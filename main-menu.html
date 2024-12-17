@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Main Menu</title>
+    <style>
+        /* General Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Neutraface Text', sans-serif;
+            height: 100vh;
+            background-color: #7A0019;
+            color: #fff;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .MainMenuEmployee {
+            width: 100%;
+            max-width: 600px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .ItHelpDeskLogoV22 {
+            width: 95%; 
+            max-width: 300px; 
+            height: auto;
+            margin: 10px 0; 
+        }
+
+        /* Button Frame Styles */
+        .Frame {
+            width: 100%;
+            max-width: 300px; 
+            padding: 10px; 
+            margin: 5px 0; 
+            background: #FFCC33;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .Frame:hover {
+            box-shadow: 0px 0px 0px 3px white;
+        }
+
+        .FrameText {
+            color: black;
+            font-size: 18px; 
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Icon Container for Top Corner */
+        .corner-icon {
+            width: 40px; 
+            height: 40px; 
+            background-color: #FEF7FF;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 10px; 
+            right: 10px; 
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+        .icon-mail::before {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 20px; 
+            color: #7A0019;
+            content: "✉️"; 
+        }
+
+        .corner-icon:hover {
+            background-color: #D1A31A; 
+        }
+
+        /* Layout for Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 300px; 
+        }
+
+         /* Log Out Button */
+        .log-out-btn {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background-color: #7A0019; 
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        z-index: 15; 
+        }
+
+        .log-out-btn:hover {
+            background-color: #D1A31A; 
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .Frame {
+                max-width: 280px;
+            }
+            
+            .FrameText {
+                font-size: 16px; 
+            }
+
+            .corner-icon {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ItHelpDeskLogoV22 {
+                width: 80%; 
+                max-width: 220px; 
+            }
+
+            .Frame {
+                max-width: 260px; 
+                padding: 8px; 
+            }
+
+            .FrameText {
+                font-size: 14px; 
+            }
+
+            .corner-icon {
+                width: 30px; 
+                height: 30px; 
+            }
+        }
+    </style>
+    <script>
+        /// Retrieve logged-in user from localStorage
+        const loggedInUser = localStorage.getItem("loggedInUser");
+
+        // Redirect to login if no user is logged in
+        if (!loggedInUser) {
+            window.location.href = "login.html"; // Redirect to login page
+        }
+
+        function goToUserTasks() {
+            // Navigate to the tasks page
+            window.location.href = `userstasks.html`;
+        }
+
+        function logOut() {
+            // Clear the stored username and redirect to login page
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+<body>
+
+<!-- Log Out Button -->
+<button class="log-out-btn" onclick="logOut()">Log Out</button>
+
+<!-- Top Corner Mail Icon -->
+<div class="corner-icon mail">
+    <div class="icon-mail"></div>
+</div>
+
+<!-- Main Menu Content -->
+<div class="MainMenuEmployee">
+    <img class="ItHelpDeskLogoV22" src="v45_1177.png" alt="IT Help Desk Logo" />
+
+    <div class="button-group">
+        <div class="Frame">
+            <div class="FrameText">MY SCHEDULE</div>
+        </div>
+        <div class="Frame">
+            <div class="FrameText">EVERYONE’S SCHEDULE</div>
+        </div>
+        <div class="Frame">
+            <div class="FrameText">TRADEBOARD</div>
+        </div>
+        <div class="Frame" onclick="goToUserTasks()">
+            <div class="FrameText">TASKS</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
